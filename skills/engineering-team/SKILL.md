@@ -17,17 +17,27 @@ No agent answers framework/library/API specifics from training data. Every speci
 - **Greenfield** (from scratch): no relevant codebase, or the user says "new project/app/site."
 - **Brownfield** (contribute): an existing repo. This is the default when you're inside one.
 
-State the mode in one line before proceeding.
+State the mode in one line before proceeding. Also judge **triviality**: a typo/rename/small mechanical fix goes straight to routing; anything non-trivial is a grilling candidate (Step 2.5).
 
 ## Step 2 (brownfield) — map before touching
 1. Spawn **`Explore`** (built-in) to map: stack, framework versions (read `package.json`/lockfiles/config), architecture, conventions, test setup, and the files the change touches.
-2. From the findings, **detect the stack and route** (Step 3). Match the codebase's own conventions over your defaults — minimal diff, in-style.
-3. For a small, well-scoped change you may implement inline in the main thread (keeps repo context). Delegate only when the work is large or needs a specialist's depth.
+2. Consider grilling (Step 2.5) — now informed by the map — before planning the diff.
+3. **Detect the stack and route** (Step 3). Match the codebase's own conventions over your defaults — minimal diff, in-style.
+4. For a small, well-scoped change you may implement inline in the main thread (keeps repo context). Delegate only when the work is large or needs a specialist's depth.
 
-## Step 2 (greenfield) — scope then architect
+## Step 2 (greenfield) — scope
 1. Pin the subject, audience, and the one job of the thing (see `frontend-design` skill if it's a UI). Pick the stack from the brief.
-2. Spawn **`Plan`** (built-in) for the implementation architecture when the build is non-trivial.
-3. Scaffold, then route implementation (Step 3).
+2. Consider grilling (Step 2.5) before architecting.
+3. Then spawn **`Plan`** (built-in) for the architecture, scaffold, and route implementation (Step 3).
+
+## Step 2.5 — grilling (PM judgment, not a gate)
+You know the `/grilling` skill and when it earns its cost. For non-trivial work, before Plan/build, decide:
+- **High ambiguity or high blast radius** (vague brief, many unstated decisions, risky/irreversible change) → run a `/grilling` session.
+- **Genuinely unsure it's worth it** → ask the user in one line: "Grill this first, or go straight to building?"
+- **Clear, well-scoped, low-risk** → skip; say in one line that you're skipping and why.
+- **Trivial** → always skip.
+
+When you do grill: one question at a time, each with your recommended answer, relentless until shared understanding of every load-bearing decision; the user can cut it short anytime. Placement is why brownfield grills AFTER `Explore` — if a question is answerable from the codebase, answer it from the code instead of asking (grilling's own rule). Output: a sharpened brief / resolved-decision record that becomes the source of truth for Plan and the specialists, and supersedes `design-director`'s single clarifying question.
 
 ## Step 3 — stack routing (pick the right agent for the codebase)
 Detect from `package.json` / config, then delegate to the matching specialist. Pass each the FULL relevant context + its official source.
@@ -55,6 +65,7 @@ When the work needs a stack with no specialist (e.g. content-heavy → Astro):
 3. If approved, add it per `ROSTER.md`'s "Growing the team" section: write `agents/<name>.md`, wire it to its official source in `SOURCES.md`, add a `ROSTER.md` row, bump `CHANGELOG.md`, and commit + tag. Then route to it.
 
 ## Rules
+- Know `/grilling` and use judgment (Step 2.5): grill or offer to grill non-trivial work before planning; never grill trivial edits.
 - Pass context explicitly every hop — subagents share no memory. Plans, file paths, conventions, prior findings.
 - Brownfield = minimal diff, match existing patterns; never impose the team's default stack on someone else's repo.
 - Report crisply between phases (mode, stack detected, ship/fix verdict). Don't dump subagent transcripts.

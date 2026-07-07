@@ -1,4 +1,4 @@
-# Roster — v0.1.0
+# Roster — v0.2.0
 
 The lead is the `engineering-team` skill (runs in the main thread). It delegates to the specialists below and to built-in agents (`Explore`, `Plan`) and skills (`/code-review`, `/tdd`, `/diagnosing-bugs`, `/verify`, `/run`). Every specialist follows **official sources first** (`SOURCES.md`).
 
@@ -14,7 +14,7 @@ The lead is the `engineering-team` skill (runs in the main thread). It delegates
 
 ## Reused, not owned
 Built-ins: `Explore` (codebase mapping), `Plan` (architecture).
-Skills: `/code-review`, `/tdd`, `/diagnosing-bugs`, `/verify`, `/run`.
+Skills: `/grilling` (stress-test the brief before planning, PM judgment), `/code-review`, `/tdd`, `/diagnosing-bugs`, `/verify`, `/run`.
 
 ## Planned (add as the team matures)
 - `astro-builder` — content-heavy sites. Backing: Context7 (`astro`). Mint when Astro work recurs.
