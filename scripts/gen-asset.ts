@@ -34,16 +34,16 @@ function parseArgs(argv: string[]): Record<string, string> {
   const out: Record<string, string> = {};
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
-    if (a.startsWith('--')) {
-      const key = a.slice(2);
-      const next = argv[i + 1];
-      if (next === undefined || next.startsWith('--')) {
-        out[key] = 'true';
-      } else {
-        out[key] = next;
-        i++;
-      }
+    if (!a.startsWith('--')) continue;
+    const key = a.slice(2);
+    // greedily consume every following token until the next --flag, so an
+    // unquoted multi-word value (e.g. a prompt whose quotes the shell dropped)
+    // is rejoined instead of truncated to its first word.
+    const parts: string[] = [];
+    while (i + 1 < argv.length && !argv[i + 1].startsWith('--')) {
+      parts.push(argv[++i]);
     }
+    out[key] = parts.length ? parts.join(' ') : 'true';
   }
   return out;
 }

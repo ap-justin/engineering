@@ -2,6 +2,9 @@
 
 Semver-ish: new agent/capability → minor, prompt fix → patch, orchestration-contract break → major.
 
+## v0.5.1 — gen-asset arg hardening
+- `scripts/gen-asset.ts`: `parseArgs` now greedily joins tokens until the next `--flag`, so a multi-word `--prompt` survives even when the shell/npm drops its quotes (previously truncated to the first word). Validated end-to-end: real Gemini 2.5 Flash Image call → `sharp` → on-prompt 1024² avif.
+
 ## v0.5.0 — graphic-designer (image asset generation)
 - `graphic-designer`: generates + enhances web-ready image assets (hero art, textures, backgrounds, icons, OG images) from `design-director`'s plan. Executor only — takes the locked palette/vibe, never re-decides the design system or writes app code. inherits (→ opus) for prompt craft + slop curation.
 - Backing = committed script `scripts/gen-asset.ts` (`@google/genai`, Gemini 2.5 Flash Image default / Imagen via `--model`, edit mode via `--input`), invoked with Bash; needs `GOOGLE_API_KEY`. Script owns a `sharp` optimization pass → emits `avif`/`webp` at requested sizes, drop-in for the builder. Team repo now has a `package.json` (deps: `@google/genai`, `sharp`, `tsx`). Video (Veo) deferred to ROSTER → Planned.
