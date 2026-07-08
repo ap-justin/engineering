@@ -2,6 +2,9 @@
 
 Semver-ish: new agent/capability → minor, prompt fix → patch, orchestration-contract break → major.
 
+## v0.4.1 — model tiers
+- `code-reviewer` pinned to `opus` (adversarial bug-finding stays strong even if the session drops to a cheaper model); `taste-reviewer` pinned to `sonnet` (anti-slop review is pattern-matching). All other agents + the lead inherit the session model. Policy documented in `ROSTER.md` → Model tiers. No prior agent declared a `model:` field.
+
 ## v0.4.0 — Next.js, Sanity, and web-perf specialists
 - `nextjs-builder`: fullstack Next.js App Router (Server/Client Components, Server Actions, route handlers, streaming, caching). Backed by `vercel:nextjs` + `vercel:next-cache-components`/`shadcn`/`react-best-practices` + Vercel MCP, Context7 fallback. Router-aware (App vs Pages).
 - `sanity-builder`: Sanity content model, GROQ + TypeGen, Portable Text, Studio, and frontend integration. Backed by `sanity:*` skills + Sanity MCP (`get_schema` before any doc op); owns schema/queries/typed data, hands layout to the framework builder.

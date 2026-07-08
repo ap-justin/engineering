@@ -15,6 +15,18 @@ The lead is the `engineering-team` skill (runs in the main thread). It delegates
 | `taste-reviewer` | Adversarial anti-slop design review | `design-taste-frontend` skill |
 | `code-reviewer` | Adversarial correctness/quality review | Context7 per stack |
 
+## Model tiers
+Agents inherit the session model unless pinned via a `model:` frontmatter field. Policy — spend on correctness (lead, implementers, code review), economize where the work is pattern-matching.
+
+| Agent(s) | `model:` | Why |
+|---|---|---|
+| `engineering-team` lead | inherit (main thread) | routes/integrates/verifies; Opus 4.8 suffices. Not settable via frontmatter |
+| `design-director`, all `*-builder`, `postgres-architect`, `vercel-perf-optimizer` | inherit (→ opus) | code correctness + design judgment; Opus 4.8 is the coding tier |
+| `code-reviewer` | **opus** (pinned) | adversarial bug-finding stays strong even if the session drops to a cheaper model |
+| `taste-reviewer` | **sonnet** (pinned) | anti-slop review is pattern-matching; cheaper tier is enough |
+
+Fable 5 is the premium tier ($10/$50) — reserve for long autonomous multi-file runs, not routing or routine builds. Drop implementers to `sonnet` only for cost/volume-sensitive work.
+
 ## Reused, not owned
 Built-ins: `Explore` (codebase mapping), `Plan` (architecture).
 Skills: `/grilling` (stress-test the brief before planning, PM judgment), `/code-review`, `/tdd`, `/diagnosing-bugs`, `/verify`, `/run`.
