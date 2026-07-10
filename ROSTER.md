@@ -1,4 +1,4 @@
-# Roster — v0.11.0
+# Roster — v0.12.0
 
 The lead is the `engineering-team` skill (runs in the main thread). It delegates to the specialists below and to built-in agents (`Explore`, `Plan`) and skills (`/code-review`, `/tdd`, `/diagnosing-bugs`, `/verify`, `/run`). Every specialist follows **official sources first** (`SOURCES.md`).
 
@@ -6,7 +6,7 @@ The lead is the `engineering-team` skill (runs in the main thread). It delegates
 | Agent | Role | Backing source |
 |---|---|---|
 | `design-director` | Design system + direction (plan, no code) | `frontend-design:frontend-design`, `design-taste-frontend` skills |
-| `graphic-designer` | Generates/enhances web-ready image assets + ambient hero video (Veo) from the plan | `scripts/gen-asset.ts` (`@google/genai`, ffmpeg) + Context7 |
+| `graphic-designer` | Generates/enhances web-ready image assets + ambient hero video (Veo) + true-alpha cutouts (rembg) from the plan | `scripts/gen-asset.ts` (`@google/genai`, ffmpeg, rembg) + Context7 |
 | `sveltekit-builder` | Fullstack Svelte 5 / SvelteKit | Svelte MCP + `svelte:*` skills (official AI surface) |
 | `react-router-builder` | React Router (framework/data/declarative/RSC) | vendored official `react-router` skill → installed docs → Context7 |
 | `nextjs-builder` | Fullstack Next.js App Router | `vercel:nextjs` + `vercel:*` skills + Vercel MCP → Context7 |

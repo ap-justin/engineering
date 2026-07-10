@@ -26,14 +26,22 @@
 //     --video --prompt "slow drifting aurora haze over deep charcoal, no people, no text" \
 //     --out ~/projects/studio/static/hero.mp4 --vwidth 1600 --aspect 16:9
 //
-// env: GOOGLE_API_KEY (or GEMINI_API_KEY) — a Google AI Studio key.
-// video path also needs `ffmpeg`/`ffprobe` on PATH (web-encode + poster frame).
+//   # true-alpha CUTOUT (background removal) of an existing photo — via rembg,
+//   # NOT gemini (gemini edit models recomposite to an opaque raster, no alpha):
+//   npm --prefix ~/projects/claude-eng-team run gen-asset -- \
+//     --cutout --input ./headshot.jpg --out ~/proj/public/broker.webp \
+//     --sizes 880 --formats webp     # --rembg-model u2net for objects/products
+//
+// env: GOOGLE_API_KEY (or GEMINI_API_KEY) — a Google AI Studio key. NOT needed
+// for --cutout (rembg runs fully local). video path also needs `ffmpeg`/`ffprobe`
+// on PATH. --cutout self-bootstraps a python venv (scripts/.venv-rembg) on first use.
 //
 import { GoogleGenAI } from '@google/genai';
 import sharp from 'sharp';
-import { readFileSync, writeFileSync, mkdirSync, unlinkSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, unlinkSync, statSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { dirname, extname, join, basename } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 // --- args -----------------------------------------------------------------
 
@@ -63,6 +71,13 @@ const outPath = args.out;
 // model that supports edit mode. pass an imagen-* id for high-fidelity t2i.
 const model = args.model ?? 'gemini-2.5-flash-image';
 const inputPath = args.input; // when set: edit/enhance this image instead of pure t2i
+// --cutout: true-alpha background removal via rembg (local, no API key). gemini
+// edit models can't emit alpha — they recomposite onto an opaque matte — so real
+// cutouts route here, not through --input on a gemini model.
+const isCutout = args.cutout === 'true';
+// u2net_human_seg is tuned for people (client portraits, headshots); pass
+// --rembg-model u2net for objects/products, or any other rembg model id.
+const rembgModel = args['rembg-model'] ?? 'u2net_human_seg';
 const formats = (args.formats ?? (extname(outPath ?? '').slice(1) || 'avif'))
   .split(',')
   .map((s) => s.trim())
@@ -93,16 +108,17 @@ const posterFormats = (args['poster-formats'] ?? 'avif,webp')
   .map((s) => s.trim())
   .filter(Boolean);
 
-if (!prompt || !outPath) {
+if (!outPath || (!prompt && !isCutout)) {
   console.error(
-    'error: --prompt and --out are required.\n' +
+    'error: --out is required (and --prompt too, unless --cutout).\n' +
       'see the header of scripts/gen-asset.ts for usage.',
   );
   process.exit(1);
 }
 
 const apiKey = process.env.GOOGLE_API_KEY ?? process.env.GEMINI_API_KEY;
-if (!apiKey) {
+if (!apiKey && !isCutout) {
+  // cutout runs fully local through rembg — no Google key needed.
   console.error('error: set GOOGLE_API_KEY (or GEMINI_API_KEY) to a Google AI Studio key.');
   process.exit(1);
 }
@@ -174,7 +190,13 @@ async function optimizeAndWrite(raw: Buffer): Promise<string[]> {
       const file = join(dir, `${stem}${suffix}.${fmt}`);
       let pipe = sharp(raw, { failOn: 'none' });
       if (w) pipe = pipe.resize({ width: w, withoutEnlargement: true });
-      const buf = await pipe.toFormat(fmt as keyof sharp.FormatEnum, { quality }).toBuffer();
+      // keep cutout alpha crisp; sharp ignores alphaQuality on opaque sources.
+      const buf = await pipe
+        .toFormat(fmt as keyof sharp.FormatEnum, {
+          quality,
+          ...(fmt === 'webp' ? { alphaQuality: 100 } : {}),
+        })
+        .toBuffer();
       writeFileSync(file, buf);
       written.push(`${file} (${(buf.length / 1024).toFixed(0)} KB)`);
     }
@@ -259,6 +281,44 @@ async function encodeVideo(raw: Buffer): Promise<string[]> {
   return written;
 }
 
+// --- cutout: rembg (true-alpha background removal, fully local) ------------
+
+// resolve a dedicated venv next to this script; created lazily on first cutout.
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+
+// strips the background to true alpha with rembg and returns the PNG bytes,
+// which then flow through the same sharp optimize/resize path as generated art.
+// rembg + its onnxruntime dep lack wheels for the newest python, so bootstrap a
+// venv with the first python (3.12→3.11→3) that has them. the onnx model itself
+// caches to ~/.u2net on first use.
+function runRembgCutout(): Buffer {
+  if (!inputPath) throw new Error('--cutout requires --input <image>.');
+  const venvDir = join(scriptDir, '.venv-rembg');
+  const rembgBin = join(venvDir, 'bin', 'rembg');
+  if (!existsSync(rembgBin)) {
+    const py = ['python3.12', 'python3.11', 'python3'].find((p) => {
+      try {
+        execFileSync(p, ['--version'], { stdio: 'ignore' });
+        return true;
+      } catch {
+        return false;
+      }
+    });
+    if (!py) throw new Error('no python3 on PATH to bootstrap rembg.');
+    console.error(`bootstrapping rembg venv (${py}) — first run only, downloads deps…`);
+    execFileSync(py, ['-m', 'venv', venvDir], { stdio: 'inherit' });
+    execFileSync(join(venvDir, 'bin', 'pip'), ['install', '-q', '--upgrade', 'pip'], { stdio: 'inherit' });
+    execFileSync(join(venvDir, 'bin', 'pip'), ['install', '-q', 'rembg[cpu,cli]'], { stdio: 'inherit' });
+  }
+  // -a = alpha matting (cleaner hair/soft edges than a hard mask).
+  const tmp = join(dirname(outPath), `.cutout-${basename(outPath, extname(outPath))}.png`);
+  mkdirSync(dirname(outPath), { recursive: true });
+  execFileSync(rembgBin, ['i', '-m', rembgModel, '-a', inputPath, tmp], { stdio: 'inherit' });
+  const buf = readFileSync(tmp);
+  unlinkSync(tmp);
+  return buf;
+}
+
 // --- run ------------------------------------------------------------------
 
 try {
@@ -266,6 +326,9 @@ try {
   if (isVideo) {
     console.error(`generating video with ${videoModel} (veo is async — this can take a few minutes)…`);
     written = await encodeVideo(await generateVideo());
+  } else if (isCutout) {
+    console.error(`cutting out background with rembg (${rembgModel})…`);
+    written = await optimizeAndWrite(runRembgCutout());
   } else {
     console.error(`generating with ${model}${inputPath ? ' (edit mode)' : ''}…`);
     written = await optimizeAndWrite(await generate());
