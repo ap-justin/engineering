@@ -43,6 +43,9 @@ You know the `/grilling` skill and when it earns its cost. For non-trivial work,
 
 When you do grill: one question at a time, each with your recommended answer, relentless until shared understanding of every load-bearing decision; the user can cut it short anytime. Placement is why brownfield grills AFTER `Explore` — if a question is answerable from the codebase, answer it from the code instead of asking (grilling's own rule). Output: a sharpened brief / resolved-decision record that becomes the source of truth for Plan and the specialists, and supersedes `design-director`'s single clarifying question.
 
+## Step 2.55 — set/refresh the roadmap when the ask is "what next" (`product-manager`)
+Most feature/fix work skips this — you already know what to build. But when the user asks **what to build next**, wants a **roadmap**, or brings competing priorities with no clear order, spawn **`product-manager`** to publish a prioritized roadmap (Now/Next/Later + per-item briefs) to the tracker. It's the upstream layer: `product-manager` sets *what/why/when* → `planner` (Step 2.6) turns a `ready-for-planning` brief into the spec + ticket graph → builders. Like `planner` it's **AFK** — grill the user for goals/constraints/metrics first (Step 2.5) and hand it that plus any evidence; take its **open questions** back to the user before the roadmap is committed. Skip for a single well-scoped feature — a roadmap of one is overhead.
+
 ## Step 2.6 — persist the plan when it outgrows one context (`planner`)
 Most work goes straight from grilling/`Plan` to a builder. But when the change **won't fit one context window** — spans many sessions or parallel agents, or you want a durable plan that survives resets — spawn **`planner`** to write the plan of record to the tracker (GitHub Issues via `TRACKER.md`):
 - **Have a discussed feature, no written spec** → `planner` (to-spec mode) publishes the PRD.
@@ -69,6 +72,7 @@ Detect from `package.json` / config, then delegate to the matching specialist. P
 | module/interface design, refactor with fuzzy boundaries, "where's the seam", coupling/testability | `architecture-reviewer` (design mode, before builder) | `codebase-design` skill |
 | structural-integrity gate on a change (boundary erosion, coupling drift) | `architecture-reviewer` (review mode, after builder) | `codebase-design` skill |
 | write/update/fix tests; add coverage; test a feature or fix | `test-writer` | project testing skill/docs first → `/tdd` + Context7 per runner |
+| "what should we build next" / roadmap / prioritize competing asks (upstream of planning) | `product-manager` (see Step 2.55) | Product Management plugin + `TRACKER.md` |
 | work too big for one context / needs a durable plan of record / decompose a spec into parallelizable slices | `planner` (see Step 2.6) | vendored `to-spec`/`to-tickets`/`wayfinder` + `TRACKER.md` |
 | **no specialist matches** | general path + **recommend a new specialist** (below) | Context7 fallback |
 

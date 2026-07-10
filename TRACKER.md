@@ -25,6 +25,18 @@ Created on first use — `gh label create <name> --color <hex> 2>/dev/null || tr
 | `ready-for-human` | Requires human implementation. |
 | `wayfinder:map` | The single map issue for a `wayfinder` effort. |
 | `wayfinder:research` / `wayfinder:prototype` / `wayfinder:grilling` / `wayfinder:task` | Ticket type on a wayfinder child issue. |
+| `roadmap` | The single pinned `ROADMAP` issue (the `product-manager` seat's roadmap of record). |
+| `roadmap:now` / `roadmap:next` / `roadmap:later` | Horizon of a roadmap brief issue. |
+| `ready-for-planning` | A `product-manager` brief that's decision-ready for `planner` to turn into a spec — the upstream handoff, distinct from `ready-for-agent` (which `planner`/`to-spec` apply once the spec/ticket exists). |
+
+## Roadmap operations
+
+Used by `product-manager` (upstream of planning). The **roadmap** is one pinned issue; each roadmap item gets a thin **brief** issue that `planner` later elaborates into a spec.
+
+- **Roadmap issue**: a single issue labelled `roadmap`, titled `ROADMAP`, body grouped **Now / Next / Later** (themes/objectives → outcomes), each item linking its brief and naming its evidence + priority score. Create once (`gh issue create --label roadmap`), **pin it** (`gh issue pin <n>`), and **update in place** thereafter (`gh issue edit <n> --body-file -`) — never spawn a second.
+- **Brief issue**: one per roadmap item — problem, target outcome, priority rationale, success metrics, constraints. Labels: `roadmap:<horizon>` + `ready-for-planning`. Thin by construction (no seams/user-stories/file-paths — that's `planner`/spec). `planner` reads it (`gh issue view <n>`) as the already-scoped brief for to-spec.
+- **Milestone** (optional, for time-boxed horizons/quarters): `gh api --method POST repos/<owner>/<repo>/milestones -f title=<Q>`; attach a brief with `gh issue edit <n> --milestone <title>`.
+- **No GitHub remote** → `ROADMAP.md` in the repo root (Now/Next/Later sections, briefs as `##` subsections); state the fallback.
 
 ## Wayfinding operations
 
