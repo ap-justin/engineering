@@ -2,6 +2,12 @@
 
 Semver-ish: new agent/capability → minor, prompt fix → patch, orchestration-contract break → major.
 
+## v0.15.1 — delegation-contract audit: less lead micro-management
+Hierarchy audit — three fixes, all tightening where the **lead** over-reaches into seats that already defer cleanly. `engineering-team/SKILL.md` only; no seat files touched.
+- **Delegate on stack, not size.** The inline-build hatch gated on triviality/size, so the lead could hand-write "small" Svelte/Next/auth/SQL itself — skipping the seat's official-source discipline (Svelte autofixer, Better Auth CLI schema, cache semantics, parameterized SQL), which is its actual value. Rule rewritten: inline only for stack-agnostic edits (typo/rename/copy/config/docs); anything touching a stack with a seat routes to that seat regardless of size.
+- **Stop restating each seat's source on hand-off.** Every seat owns its own source chain (`SOURCES.md` authoritative); the lead re-telling it per delegation was low-trust and drift-prone (violated the repo's own single-source-of-truth rule). Team principle + Step 3 intro now say hand off context and trust the seat.
+- **Drop the duplicated Backing-source column** from the Step 3 routing table — it repeated `ROSTER.md`/`SOURCES.md` and could drift. Trigger→specialist routing (SKILL's genuine job) stays.
+
 ## v0.15.0 — better-auth-specialist seat (the auth layer)
 - **`better-auth-specialist`**: the missing auth seat. Owns the Better Auth layer — server `betterAuth()` config + framework handler mount, DB adapter + CLI-generated schema, plugins (2FA/passkey/organization/magic-link/email-OTP/admin/social-OAuth/SSO-OIDC), session/cookie policy, and the typed `createAuthClient()`. Framework-agnostic: hands a typed auth surface (session helpers, client, protected-route primitives) to the `*-builder` seats; the builder owns login/signup UI + where guards sit. Completes a real gap — the team could model data (`postgres-architect`) but not gate it.
 - **Boundary drawn**: auth tables are Better-Auth-owned (CLI `generate`/`migrate`), so the seat coordinates with `postgres-architect` on one shared DB/adapter and any FK into `user` — it does not hand-author auth tables, and `postgres-architect` keeps the domain schema. Builder places guards; specialist exposes `getSession`.
