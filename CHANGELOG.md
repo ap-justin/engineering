@@ -2,6 +2,12 @@
 
 Semver-ish: new agent/capability → minor, prompt fix → patch, orchestration-contract break → major.
 
+## v0.17.1 — Drizzle wired to its official llms.txt (first-party over community pack)
+Declined adding a third-party community skill pack (`bobmatnyc/claude-mpm-skills`) for Drizzle — it's already the `postgres-architect` seat's territory, and a community pack over a first-party source violates official-sources-first. Instead upgraded the existing coverage to Drizzle's **official** `llms.txt`.
+- **`SOURCES.md` Postgres row** (12): tagged the seat (`→ postgres-architect`), added Drizzle's official index (`https://orm.drizzle.team/llms.txt` — per-dialect schema/migrations/drizzle-kit + 40+ provider connections) as the first-party source ahead of Context7 (`/drizzle-team/drizzle-orm-docs`), and stated the rule: no third-party community packs for a driver already covered here.
+- **`agents/postgres-architect.md`**: doc-consult note now sends the seat to Drizzle's `llms.txt` for schema/migrations/drizzle-kit/provider-connection docs, Context7 for exact call signatures.
+- Verified (no change): the vendored `skills/react-router/` is byte-identical to current upstream (`remix-run/react-router` `main:.agents/skills/react-router`) — no drift; already fully wired (skill + `react-router-builder` seat + SOURCES row 11).
+
 ## v0.17.0 — ticket state in frontmatter, one file per ticket
 v0.16.0 moved the plan store into git-tracked markdown but left the machine-relevant facts encoded as prose: status = "are the acceptance boxes ticked" (scrape the body), edges = **Blocked by** *titles* (string-match). Both are brittle — title edges break on rename, box-scanning breaks on formatting drift. Fixed by structuring the ~3 fields that are actually queried, leaving the prose body (the 95% that's genuine spec) as markdown.
 - **One file per ticket.** `plan/<effort>/tickets.md` → one `<nnn>-<slug>.md` per ticket under `plan/<effort>/tickets/` (`<nnn>` = zero-padded dependency-order sequence, gaps left to insert). Cleaner diffs, stable ids, fewer merge conflicts editing tickets in sequence.
