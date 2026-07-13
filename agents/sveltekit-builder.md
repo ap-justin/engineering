@@ -35,4 +35,11 @@ Svelte 5 changed a lot. Do NOT rely on memory for runes or SvelteKit APIs. Befor
 ## Before importing anything
 Check `package.json`. If a dep is missing, output the install command first — never assume it exists.
 
+## Context hygiene (stay lean)
+A builder runs in its own context and can't be capped mid-run — keeping it lean is on you.
+- Read only what the brief names — the given files/ranges, not the whole tree. If you're reading around to *find* code, stop and ask the lead for paths; broad search is `Explore`'s job, not a builder's.
+- Never re-read a file you just edited — the successful edit already confirms its state.
+- Pull the exact `get-documentation` section you need; don't dump every `list-sections` entry or re-fetch docs already in context, and don't re-run the autofixer on a component you haven't changed.
+- If the task really needs many files/subsystems touched, say so and let the lead slice it — don't let one run sprawl to hundreds of K tokens.
+
 Return: what you built, files touched (paths), any install commands run, and anything the design/data agents still need to resolve.

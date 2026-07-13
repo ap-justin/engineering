@@ -55,9 +55,27 @@ Other artifacts:
 
 **Ids join; titles narrate.** Frontmatter edges use ids; everything a human reads — your return, map bodies, *Decisions so far* — refers to a ticket by its **title** wrapping its file link, never a bare id. The id is a machine handle, not a human one.
 
+## Reconcile & capture (the lead, at commit)
+
+The store only stays truthful if the plan moves **with** the code. There is no git hook and no tracker daemon — reconciliation is a **lead** action (`engineering-team` Step 4.5), run as part of the **same commit** that lands each slice, so `git log` never shows code ahead of a stale plan and the reconciled state rides into review in the same PR. It's automatic (write, then report) and applies whenever a `management/` store exists:
+
+- **Ticket status** → set `status: done` on every ticket whose acceptance boxes are all satisfied; recompute the frontier and report the new takeable set. Never `done` on unchecked acceptance — that's what makes the frontier lie.
+- **Roadmap** → move any now-complete item in `ROADMAP.md` (Now → shipped), in place.
+- **Idea capture** → a pitched or discovered idea, out of scope for the current slice, appends **one line** to the `## Icebox` section of `ROADMAP.md`. Zero-friction and pre-triage: no brief, no evidence, no score — just the line — and never derail the task to build it.
+
+**The Icebox — captured, untriaged.** A single `## Icebox (captured, untriaged)` section at the **bottom of `ROADMAP.md`** (not a separate file, not a brief). It is a lossless parking lot deliberately **outside** the curated Now/Next/Later — raw ideas don't pollute the prioritized horizons, and nothing is lost mid-task. Entry format:
+
+```markdown
+## Icebox (captured, untriaged)
+- <one-line idea> — _pitched|discovered · effort: <slug> · 2026-07-12_
+```
+
+`pitched` = user, `discovered` = team; `effort` is the slug it surfaced in; the date is when captured. `product-manager` **triages** the Icebox on its next run — promoting a line into a real Now/Next/Later item with a brief + priority score, or dropping it — so the Icebox drains rather than growing forever. Until then a line here is a reminder, explicitly **not** a prioritized commitment.
+
 ## Roadmap operations (`product-manager`)
 
-- **`ROADMAP.md`**: a single file, body grouped **Now / Next / Later** (themes/objectives → outcomes), each item linking its brief file and naming its evidence + priority score. **Update in place** — never spawn a second roadmap file. Quarterly / OKR horizons are `###` groupings inside a section, not separate objects (replaces GitHub Milestones).
+- **`ROADMAP.md`**: a single file, body grouped **Now / Next / Later** (themes/objectives → outcomes), each item linking its brief file and naming its evidence + priority score, plus a trailing **`## Icebox`** section of captured-but-untriaged one-liners (see *Reconcile & capture*). **Update in place** — never spawn a second roadmap file. Quarterly / OKR horizons are `###` groupings inside a section, not separate objects (replaces GitHub Milestones).
+- **Triage the Icebox**: each run, promote Icebox lines into real horizon items (brief + score) or drop them, so raw captures become prioritized work rather than accumulating.
 - **`briefs/<slug>.md`**: one per roadmap item — problem, target outcome, priority rationale (framework + score), success metrics, constraints. Frontmatter `id:` + `horizon:` + `status: ready-for-planning`. Thin by construction (no seams / user-stories / file-paths — that's `planner`/spec territory, and specifics rot).
 
 ## Planning operations (`planner`)

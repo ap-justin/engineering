@@ -59,7 +59,7 @@ Most work goes straight from grilling/`Plan` to a builder. But when the change *
 `planner` is **AFK** — it synthesizes and publishes, but the human loops stay yours: grill first (Step 2.5) to hand it a sharp brief, and take its **open questions** back to the user before building. It returns drafts (not published) when a decision is unresolved. Skip this step entirely for anything that fits one session — it's overhead you don't need for a normal feature/fix.
 
 ## Step 3 — stack routing (pick the right agent for the codebase)
-Detect from `package.json` / config, then delegate to the matching specialist. Pass the FULL relevant context; the seat owns its official source (per the team principle — don't restate it). Backing sources live in `ROSTER.md`/`SOURCES.md`, not here, so they can't drift out of sync.
+Detect from `package.json` / config, then delegate to the matching specialist. Pass the relevant context in full but **scoped** — the exact files/paths (and ranges) the change touches, handed down from `Explore`'s map so the builder doesn't re-discover them, plus the plan and conventions. Enough to build without re-exploring; not a dump of the whole tree — a builder that has to hunt for its own files is the #1 way a single run sprawls to hundreds of K tokens. The seat owns its official source (per the team principle — don't restate it). Backing sources live in `ROSTER.md`/`SOURCES.md`, not here, so they can't drift out of sync.
 
 | Detected / needed | Specialist |
 |---|---|
@@ -71,7 +71,9 @@ Detect from `package.json` / config, then delegate to the matching specialist. P
 | SEO/AEO: metadata/OG, canonical/hreflang, sitemap/robots, JSON-LD, indexability, AI-answer readiness (post-build) | `seo-engineer` |
 | Postgres / Drizzle / Prisma / postgres.js | `postgres-architect` |
 | auth / login / signup / sessions / social-OAuth / SSO / `better-auth` | `better-auth-specialist` |
-| design/landing/marketing/portfolio UI | `design-director` → builder → `taste-reviewer` (static) → `visual-reviewer` (rendered) |
+| interactive UI primitive: modal/dialog/dropdown/menu/combobox/select/date-picker/tabs/tooltip/popover/toast — accessible, not hand-rolled / `@ark-ui/*` | `ark-ui-specialist` (→ framework builder places it) |
+| user research / user flows / IA / usability critique / UX copy / design→eng handoff spec (upstream of visual design) | `ux-designer` (before `design-director`) |
+| design/landing/marketing/portfolio UI | `ux-designer` (if flows/IA/research unresolved) → `design-director` → builder → `taste-reviewer` (static) → `visual-reviewer` (rendered) |
 | needs generated/enhanced image assets (hero art, textures, OG, restyle a photo) | `design-director` → `graphic-designer` → builder → `taste-reviewer` |
 | correctness/quality review of a diff | `code-reviewer` (or `/code-review` skill inline) |
 | module/interface design, refactor with fuzzy boundaries, "where's the seam", coupling/testability | `architecture-reviewer` (design mode, before builder) |
@@ -90,6 +92,14 @@ Detect from `package.json` / config, then delegate to the matching specialist. P
 - Behavior: `/verify` or `/run` to confirm it actually works.
 - Loop fixes back to the builder; max 2 loops, then surface remaining issues.
 
+## Step 4.5 — reconcile the plan (at commit)
+When the effort has a `management/` store (a `plan/<effort>/` and/or `roadmap/` — skip entirely if it doesn't), the plan must move with the code, not drift behind it. After the slice is verified and as part of the **same commit** that lands it, reconcile — this is **yours**, not a builder's or a subagent's, and it's automatic (write the files, report after; don't ask per-edit):
+- **Ticket status** — for every ticket whose acceptance boxes are all satisfied by what shipped, set `status: done`. Then recompute the **frontier** (`status != done` tickets whose `blocked_by` are all done) and report the new takeable set. Never mark done on unchecked acceptance — that's the one thing that makes the frontier lie.
+- **Roadmap** — if a roadmap item's plan is now complete, move it in `management/roadmap/ROADMAP.md` (Now → shipped). Update in place.
+- **Idea capture** — any idea the **user pitches** or the **team discovers** mid-task that's out of scope for the current slice: append a one-line entry to the `## Icebox (captured, untriaged)` section of `ROADMAP.md` and **keep going** — never derail the task to build it. Capture is not only-at-commit: park it the moment it surfaces; this step is just the guaranteed catch-all sweep. It's a lossless, un-prioritized parking lot — `product-manager` promotes Icebox lines into real Now/Next/Later items (with a brief + score) on its next run, so a raw idea here needs no evidence or framework, just the one line. See `TRACKER.md` → *Reconcile & capture*.
+
+The point of same-commit reconciliation: plan and code share one git history, so `git log` never shows code ahead of a stale plan, and the reconciled state rides into review in the same PR.
+
 ## Handling gaps — the "let's add an Astro agent" move
 When the work needs a stack with no specialist (e.g. content-heavy → Astro):
 1. Proceed via the general path (Explore conventions + implement, backed by Context7) so the user isn't blocked.
@@ -98,7 +108,9 @@ When the work needs a stack with no specialist (e.g. content-heavy → Astro):
 
 ## Rules
 - Know `/grilling` and use judgment (Step 2.5): grill or offer to grill non-trivial work before planning; never grill trivial edits.
-- Pass context explicitly every hop — subagents share no memory. Plans, file paths, conventions, prior findings.
+- Pass context explicitly every hop — subagents share no memory: plans, file paths, conventions, prior findings — **scoped** to what the hop needs (hand down the `Explore` map's paths) so the subagent builds instead of re-exploring the tree.
+- Keep a builder's run bounded. A subagent runs in its own context and can't be capped mid-run, so scope in, don't cap after: a build that would touch many files/subsystems gets **split across sequential builders** (or routed through `planner`'s tracer-bullet slices), not handed to one builder that sprawls to hundreds of K tokens. Isolation already keeps that bloat out of your context — this keeps it out of the builder's.
 - Brownfield = minimal diff, match existing patterns; never impose the team's default stack on someone else's repo.
+- If a `management/` store exists, reconcile it in the commit that lands each slice (Step 4.5) and capture any pitched/discovered out-of-scope idea to the roadmap Icebox the moment it surfaces — don't let the plan drift or an idea drop.
 - Report crisply between phases (mode, stack detected, ship/fix verdict). Don't dump subagent transcripts.
 - On request, report the team version (from `VERSION`) and roster.

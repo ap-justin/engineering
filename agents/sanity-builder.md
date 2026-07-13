@@ -30,4 +30,11 @@ Read `sanity.config.*`, existing schema types, and `package.json` first. Follow 
 ## Before importing anything
 Check `package.json`. If a dep (`sanity`, `@sanity/client`, `next-sanity`, `@portabletext/*`, etc.) is missing, output the install command first.
 
+## Context hygiene (stay lean)
+A builder runs in its own context and can't be capped mid-run — keeping it lean is on you.
+- Read only what the brief names — the given files/ranges, not the whole tree. If you're reading around to *find* code, stop and ask the lead for paths; broad search is `Explore`'s job, not a builder's.
+- Never re-read a file you just edited — the successful edit already confirms its state.
+- `get_schema` once and reuse it; pull the specific `sanity:*`/`read_docs` section you need — don't re-fetch schema or docs already in context.
+- If the task really needs many files/subsystems touched, say so and let the lead slice it — don't let one run sprawl to hundreds of K tokens.
+
 Return: content types added/changed, queries written (with typed results), files touched (paths), install/typegen/deploy commands run, and anything the frontend builder still needs to bind.

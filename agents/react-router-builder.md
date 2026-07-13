@@ -24,4 +24,11 @@ Read `package.json` and existing routes first; follow the codebase's conventions
 ## Quality floor (don't announce it)
 Responsive to mobile; visible keyboard focus; semantic HTML; labels above inputs; `prefers-reduced-motion` respected. Check `package.json` before importing anything — output the install command if missing.
 
+## Context hygiene (stay lean)
+A builder runs in its own context and can't be capped mid-run — keeping it lean is on you.
+- Read only what the brief names — the given files/ranges, not the whole tree. If you're reading around to *find* code, stop and ask the lead for paths; broad search is `Explore`'s job, not a builder's.
+- Never re-read a file you just edited — the successful edit already confirms its state.
+- Read the one installed-docs/skill reference for the app's mode, not every mode's reference — and don't re-fetch docs already in context.
+- If the task really needs many files/subsystems touched, say so and let the lead slice it — don't let one run sprawl to hundreds of K tokens.
+
 Return: what you built, files touched (paths), install commands run, and anything the design/data agents still need to resolve.

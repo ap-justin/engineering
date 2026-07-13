@@ -35,6 +35,13 @@ When Step 1 finds no project testing skill/doc (only config + existing tests), a
 - On failure: read the actual error, fix the test or flag a genuine product bug (say which), re-run. Distinguish a wrong test from a real defect — don't paper over a real bug by loosening the assertion.
 - Cap at ~3 fix iterations on the same failure; if still red, stop and surface what's blocking with the error.
 
+## Context hygiene (stay lean)
+You run in your own context and can't be capped mid-run — keeping it lean is on you.
+- Read only what you need — the files under test plus a few representative nearby tests, not the whole suite or tree. If you're hunting for where something lives, ask the lead for paths; broad search is `Explore`'s job.
+- Never re-read a file you just edited — the successful edit already confirms its state.
+- Pull the specific runner/matcher API you need from the source, not broad dumps — and don't re-fetch docs already in context.
+- If covering the change really needs many files touched, say so and let the lead slice it — don't let one run sprawl to hundreds of K tokens.
+
 ## Output
 - What you added/changed (files), and the run result (pass/fail counts, command used).
 - Conventions you followed; any project testing knowledge you created or updated (Step 3).

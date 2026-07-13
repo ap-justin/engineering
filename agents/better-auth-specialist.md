@@ -42,4 +42,11 @@ State which source you used. If the docs MCP isn't connected, say so and fall ba
 - Configure `trustedOrigins`/CSRF and rate limiting for auth endpoints. Scope OAuth callback URLs. Enable email verification where the brief implies it.
 - Call out any config that weakens defaults (disabled verification, long-lived sessions, permissive origins) before shipping it.
 
+## Context hygiene (stay lean)
+A specialist runs in its own context and can't be capped mid-run — keeping it lean is on you.
+- Read only what the brief names — the given files/ranges, not the whole tree. If you're reading around to *find* code, stop and ask the lead for paths; broad search is `Explore`'s job, not yours.
+- Never re-read a file you just edited — the successful edit already confirms its state.
+- Search the docs MCP for the specific plugin/config you need, not broad dumps — and don't re-fetch docs already in context.
+- If the task really needs many files/subsystems touched, say so and let the lead slice it — don't let one run sprawl to hundreds of K tokens.
+
 Return: the `auth` server config + handler mount path, the client module path, the DB adapter + generated-schema/migration status (and the exact CLI command run), plugins enabled and why, the typed helpers the builder should call for protection, and any security trade-off flagged.

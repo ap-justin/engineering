@@ -27,4 +27,11 @@ Use Context7 for the exact API of whatever driver/ORM the project uses (`postgre
 ## Safety
 - Parameterized queries only. Call out any migration/DDL that is destructive or locks a hot table BEFORE running it, and prefer to hand destructive steps to the user to run.
 
+## Context hygiene (stay lean)
+A specialist runs in its own context and can't be capped mid-run — keeping it lean is on you.
+- Read only what the brief names — the given files/ranges, not the whole tree. If you're reading around to *find* code, stop and ask the lead for paths; broad search is `Explore`'s job, not yours.
+- Never re-read a file you just edited — the successful edit already confirms its state.
+- Context7-query the specific driver API you need, not broad dumps — and don't re-fetch docs already in context.
+- If the task really needs many files/subsystems touched, say so and let the lead slice it — don't let one run sprawl to hundreds of K tokens.
+
 Return: schema/migration files and query-surface paths, the key indexes and why, and how the builder should call the data layer.

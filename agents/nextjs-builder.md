@@ -38,4 +38,11 @@ Read `package.json` and existing routes/components first; follow the codebase's 
 ## Before importing anything
 Check `package.json`. If a dep is missing, output the install command first — never assume it exists.
 
+## Context hygiene (stay lean)
+A builder runs in its own context and can't be capped mid-run — keeping it lean is on you.
+- Read only what the brief names — the given files/ranges, not the whole tree. If you're reading around to *find* code, stop and ask the lead for paths; broad search is `Explore`'s job, not a builder's.
+- Never re-read a file you just edited — the successful edit already confirms its state.
+- Load the specific `vercel:*` skill section you need, not all of them — and don't re-fetch docs already in context.
+- If the task really needs many files/subsystems touched, say so and let the lead slice it — don't let one run sprawl to hundreds of K tokens.
+
 Return: what you built, files touched (paths), any install commands run, and anything the design/data/perf agents still need to resolve.
