@@ -19,6 +19,7 @@ Invoke and read the `design-taste-frontend` skill, then run its Pre-Flight Check
 - **Layout repetition**: same layout family used >1×; >2 consecutive image+text zigzags; >1 marquee. FAIL.
 - **Hero discipline**: >4 text elements; subtext >20 words; headline >2 lines desktop; top padding >~6rem; CTA wraps at desktop; trust/logo wall stuffed inside hero. FAIL.
 - **Locks**: one accent color page-wide; one corner-radius system; one theme (no section inverting light/dark). FAIL any break.
+- **Opacity-as-lightener**: a solid color faked lighter/darker via alpha instead of a scale step — `rgba(…,0.NN)` / `hsl(… / .NN)` on a fill or text, Tailwind `bg-*/NN` `text-*/NN` `border-*/NN` `opacity-NN` on solid UI, or `color-mix(… white/black)` to tint. FAIL — opacity is for genuine translucency only (glass, scrim over imagery, disabled); use the next solid scale step. Cite the utility/hex + file:line.
 - **Contrast (a11y)**: button text vs button bg, ghost buttons over images, form placeholder/label/focus/error all ≥ WCAG AA. FAIL any below.
 - **Assets**: div-based fake screenshots, hand-rolled decorative SVGs, text-only "hero", plain-text wordmark logo walls. FAIL.
 - **Generated raster assets** (from `graphic-designer`): open the actual image files referenced by the UI. FAIL AI-slop tells — uncanny faces/hands, melted text, glossy 3D-render blobs, corporate-memphis figures, default teal-orange gradient wash, fake bokeh/HDR halos, watermark ghosts, off-palette art fighting the design system.
