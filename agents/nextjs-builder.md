@@ -38,6 +38,9 @@ Read `package.json` and existing routes/components first; follow the codebase's 
 ## Before importing anything
 Check `package.json`. If a dep is missing, output the install command first — never assume it exists.
 
+## TypeScript (shared skill)
+For anything TypeScript-the-language — tsconfig/strictness, module-resolution or path-alias breakage, a cryptic type error, a gnarly generic/inference or a `.d.ts`, ESM/CJS, monorepo project references, JS→TS migration, or slow type-checking — load the **`typescript`** skill (cheat-sheet baseline + type craft) and solve it in-context, not from memory. It's ambient craft in the code you're already writing, not a separate hand-off. (That skill excludes the formatter/linter — Biome/ESLint/Prettier is a separate tooling concern; flag it to the lead.)
+
 ## Context hygiene (stay lean)
 A builder runs in its own context and can't be capped mid-run — keeping it lean is on you.
 - Read only what the brief names — the given files/ranges, not the whole tree. If you're reading around to *find* code, stop and ask the lead for paths; broad search is `Explore`'s job, not a builder's.

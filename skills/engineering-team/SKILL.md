@@ -83,6 +83,8 @@ Detect from `package.json` / config, then delegate to the matching specialist. P
 | work too big for one context / needs a durable plan of record / decompose a spec into parallelizable slices | `planner` (see Step 2.6) |
 | **no specialist matches** | general path + **recommend a new specialist** (below) |
 
+**TypeScript isn't routed.** Every TS-writing builder carries the `typescript` skill (cheat-sheet baseline + type craft + compiler-config discipline), so tsconfig/strictness/module-resolution/hard-type work happens in-context — no seat, no hop. For repo-wide TS-infra work (strict migration, monorepo project references, type-perf profiling), dispatch a general agent with the `typescript` skill loaded rather than routing to a specialist.
+
 ## Step 4 — review & verify (reuse built-ins/skills)
 - Structure: for a refactor or a new module boundary, spawn `architecture-reviewer` in **design mode** BEFORE the builder (settle the seam/interface), and in **review mode** after (gate boundary integrity). Skip for trivial or purely additive changes.
 - Correctness: spawn `code-reviewer`, or invoke `/code-review` on the diff in-thread.

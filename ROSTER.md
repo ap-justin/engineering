@@ -1,4 +1,4 @@
-# Roster — v0.22.0
+# Roster — v0.23.0
 
 The lead is the `engineering-team` skill (runs in the main thread). It delegates to the specialists below and to built-in agents (`Explore`, `Plan`) and skills (`/code-review`, `/tdd`, `/diagnosing-bugs`, `/verify`, `/run`). Every specialist follows **official sources first** (`SOURCES.md`).
 
@@ -46,6 +46,7 @@ Fable 5 is the premium tier ($10/$50) — reserve for long autonomous multi-file
 
 ## Reused, not owned
 Built-ins: `Explore` (codebase mapping), `Plan` (architecture).
+Repo-authored shared skill: **`typescript`** (`skills/typescript/` — cheat-sheet baseline + type craft + compiler-config discipline). Loaded by every TS-writing builder (`*-builder`, `better-auth-specialist`, `ark-ui-specialist`, `postgres-architect`, `test-writer`) — **TypeScript is ambient, not a seat**: no fuzzy builder/expert seam, no extra hop for routine typing. Repo-wide TS-infra work (strict migration, monorepo project references, type-perf profiling) = the lead dispatches a general agent with this skill; mint a dedicated seat only if that recurs. Excludes the formatter/linter (Biome/ESLint/Prettier — a separate tooling concern, not yet seated).
 Skills: `/grilling` (stress-test the brief before planning, PM judgment), `/code-review`, `/tdd`, `/diagnosing-bugs`, `/verify`, `/run`, `/writing-great-skills` (authoring standard for this repo — see Growing the team).
 Vendored official skills: `react-router` (backs `react-router-builder`); `to-spec`/`to-tickets`/`wayfinder` (back `planner`); `accessibility-review` (WCAG audit, a11y sibling of `visual-reviewer`); `user-research`/`research-synthesis`/`design-critique`/`ux-copy`/`design-handoff` (back `ux-designer`); `roadmap-update`/`synthesize-research`/`competitive-brief`/`metrics-review`/`stakeholder-update`/`product-brainstorming` (back `product-manager`) — all from the knowledge-work plugins, vendored so their MCP fleets stay out. See `SOURCES.md` → Vendored resources. Optional official subagent: `svelte:svelte-file-editor`.
 Plan store: `TRACKER.md` (git-tracked markdown under `management/`) — the planner's + product-manager's plan-of-record store; replaces `/setup-matt-pocock-skills` and GitHub Issues. The **lead reconciles it at commit** (`engineering-team` Step 4.5): flip done tickets, advance the roadmap, and capture pitched/discovered ideas to the roadmap **Icebox** — plan and code share one commit, no drift.

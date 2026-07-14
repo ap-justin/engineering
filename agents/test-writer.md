@@ -35,6 +35,9 @@ When Step 1 finds no project testing skill/doc (only config + existing tests), a
 - On failure: read the actual error, fix the test or flag a genuine product bug (say which), re-run. Distinguish a wrong test from a real defect — don't paper over a real bug by loosening the assertion.
 - Cap at ~3 fix iterations on the same failure; if still red, stop and surface what's blocking with the error.
 
+## TypeScript (shared skill)
+For anything TypeScript-the-language — tsconfig/strictness, module-resolution or path-alias breakage, a cryptic type error, a gnarly generic/inference or a `.d.ts`, ESM/CJS, monorepo project references, JS→TS migration, or slow type-checking — load the **`typescript`** skill (cheat-sheet baseline + type craft) and solve it in-context, not from memory. It's ambient craft in the code you're already writing, not a separate hand-off. (That skill excludes the formatter/linter — Biome/ESLint/Prettier is a separate tooling concern; flag it to the lead.)
+
 ## Context hygiene (stay lean)
 You run in your own context and can't be capped mid-run — keeping it lean is on you.
 - Read only what you need — the files under test plus a few representative nearby tests, not the whole suite or tree. If you're hunting for where something lives, ask the lead for paths; broad search is `Explore`'s job.
