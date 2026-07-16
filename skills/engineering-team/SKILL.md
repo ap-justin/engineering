@@ -75,6 +75,7 @@ Detect from `package.json` / config, then delegate to the matching specialist. P
 | user research / user flows / IA / usability critique / UX copy / design→eng handoff spec (upstream of visual design) | `ux-designer` (before `design-director`) |
 | design/landing/marketing/portfolio UI | `ux-designer` (if flows/IA/research unresolved) → `design-director` → builder → `taste-reviewer` (static) → `visual-reviewer` (rendered) |
 | needs generated/enhanced image assets (hero art, textures, OG, restyle a photo) | `design-director` → `graphic-designer` → builder → `taste-reviewer` |
+| marketing/landing-page copy (homepage/landing/pricing/feature/about), copy-editing, or a page/form that isn't converting (CRO) — on shipped pages, NOT channels/campaigns | `conversion-copywriter` (feeds `design-director` → builder; meta markup → `seo-engineer`) |
 | correctness/quality review of a diff | `code-reviewer` (or `/code-review` skill inline) |
 | module/interface design, refactor with fuzzy boundaries, "where's the seam", coupling/testability | `architecture-reviewer` (design mode, before builder) |
 | structural-integrity gate on a change (boundary erosion, coupling drift) | `architecture-reviewer` (review mode, after builder) |
