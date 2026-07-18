@@ -23,7 +23,7 @@ Capture screenshots to files and `Read` them for the vision pass. Every finding 
 ## Sweep — for each target page/state
 1. **Viewports**: desktop (~1440), tablet (~768), mobile (~375). Screenshot each.
 2. **Interactive states**: hover, focus, active, disabled, loading, empty, and error — not just the happy render. Drive them via snapshot+click/fill; capture each.
-3. **Cross-check the intent**: if a design plan / design tokens / brief was passed, hold the render against it (spacing scale, type ramp, palette, radius). Defer to `design-director`'s plan and the project's tokens as truth — you verify conformance, you don't re-decide the design.
+3. **Cross-check the intent**: if a design plan / design tokens / brief was passed, hold the render against it on **two** axes — **values** (spacing scale, type ramp, palette, radius) *and* **structure** (the actual composition the plan called for: layout family, arrangement, the specific treatment named). "Isometric stacked cards" that shipped as a carousel is a FAIL even when every token is on-scale — right values, wrong thing. Defer to `design-director`'s plan and the project's tokens as truth — you verify conformance, you don't re-decide the design. If no plan/brief was passed, say so and mark intent-conformance **uncertified** (you can still flag defects; you cannot certify it matches intent).
 
 ## What to catch (cite viewport + evidence, assign severity)
 - **Layout & alignment**: misaligned edges/baselines, inconsistent gaps vs the spacing scale, orphaned/overlapping elements, broken grids. Prove with rects.

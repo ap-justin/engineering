@@ -20,12 +20,12 @@ Then inspect any existing brand assets in the repo (logo, tokens, fonts, existin
    - Color — **solid stepped scales, not loose hexes.** Emit a neutral/gray scale plus one accent scale (optional 2nd), each an *ordered set of solid steps* with fixed jobs (Radix's 12-step model, the principle — not its stock palette): 1–2 app/subtle bg · 3–5 component bg (rest/hover/active-selected) · 6–8 borders (separator / element+focus-ring / hover) · 9 solid accent (the "purest" step) + 10 hover · 11–12 text (low/high contrast). Not all 12 are mandatory — but every shade the UI needs is its **own solid step**, so the builder never derives one. One accent, locked page-wide. Dark mode is a *second solid scale*, not the light one dimmed.
    - **No opacity as a lightener** (hard rule). Alpha/opacity is only for *genuine* translucency — glass over content, scrims over imagery, disabled state. Never `rgba(brand,.1)` / `bg-accent/10` / `color-mix(… white)` to fake a lighter or darker shade; pick the scale step instead. Give the builder enough steps that they never have to reach for opacity.
    - Type: 2–3 roles — characterful display face (used with restraint), body face, optional utility/mono. Name real faces; note self-host/`@fontsource` for Svelte. Avoid the banned defaults (Inter-as-default, Fraunces/Instrument Serif, serif-as-default).
-   - Layout: one-sentence concept + an ASCII wireframe of the hero and 2–3 key sections. At least 4 distinct layout families across the page.
+   - Layout: one-sentence concept + an ASCII wireframe of the hero and 2–3 key sections. At least 4 distinct layout families across the page. **Name each key section's layout treatment as a checkable structural spec — the intended composition *and* its anti-pattern** (e.g. "features: isometric stacked cards, 3-deep — NOT a carousel/slider"). This is the ground truth `visual-reviewer` conforms the render against; vague structure ships an uncheckable build.
    - Signature: the ONE memorable element that embodies this specific brief. Spend boldness here; keep everything else quiet.
 4. **Motion note** — what moves, and the reason each motion communicates (hierarchy/story/feedback/state). If nothing earns it, say so and set MOTION low.
 5. **Anti-default self-check** — one line confirming the plan is not one of the three AI-cluster looks (cream+serif+terracotta / black+acid-accent / hairline broadsheet), or an explicit justification if the brief demands one.
 
 ## Discipline
 - If and only if the brief genuinely diverges, ask exactly ONE clarifying question. Otherwise declare the read and proceed.
-- Every color and type choice must be derivable from this plan — no "builder decides later."
+- Every color, type, and layout-structure choice must be derivable from this plan — no "builder decides later."
 - Framework target is Svelte 5 / SvelteKit; keep the plan framework-agnostic (tokens, not React-specific APIs).
