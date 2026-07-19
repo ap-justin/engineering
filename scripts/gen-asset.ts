@@ -11,24 +11,24 @@
 // trust memory. see SOURCES.md.
 //
 // usage:
-//   npm --prefix ~/projects/claude-eng-team run gen-asset -- \
+//   npm --prefix "${CLAUDE_PLUGIN_ROOT}" run gen-asset -- \
 //     --prompt "abstract brushed-brass texture, warm charcoal ground, no text" \
 //     --out ~/projects/jeweler-demo/static/hero.avif \
 //     --sizes 1600,800 --formats avif,webp
 //
 //   # edit / enhance an existing image (Gemini image model, chat mode):
-//   npm --prefix ~/projects/claude-eng-team run gen-asset -- \
+//   npm --prefix "${CLAUDE_PLUGIN_ROOT}" run gen-asset -- \
 //     --input ./client-photo.jpg --prompt "remove background, warm studio light" \
 //     --out ~/projects/fastlane/static/product.avif
 //
 //   # ambient hero VIDEO background (Veo). emits mp4 + webm + poster (avif/webp):
-//   npm --prefix ~/projects/claude-eng-team run gen-asset -- \
+//   npm --prefix "${CLAUDE_PLUGIN_ROOT}" run gen-asset -- \
 //     --video --prompt "slow drifting aurora haze over deep charcoal, no people, no text" \
 //     --out ~/projects/studio/static/hero.mp4 --vwidth 1600 --aspect 16:9
 //
 //   # true-alpha CUTOUT (background removal) of an existing photo — via rembg,
 //   # NOT gemini (gemini edit models recomposite to an opaque raster, no alpha):
-//   npm --prefix ~/projects/claude-eng-team run gen-asset -- \
+//   npm --prefix "${CLAUDE_PLUGIN_ROOT}" run gen-asset -- \
 //     --cutout --input ./headshot.jpg --out ~/proj/public/broker.webp \
 //     --sizes 880 --formats webp     # --rembg-model u2net for objects/products
 //

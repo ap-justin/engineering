@@ -21,7 +21,7 @@ State which source you used.
 - **`test-writer` owns** the tests; you own the `test` task's turbo wiring + caching (correct `inputs`/`outputs` so cached test runs aren't stale).
 
 ## pnpm is the team default — you're its owner
-The lead scaffolds **pnpm** greenfield (the `engineering-team` team default: `pnpm` install/scripts/`pnpm-lock.yaml`). You own that default's config thereafter — workspaces, catalogs (single-version-policy across packages), lockfile hygiene. **Brownfield: match the repo's actual package manager** (npm/yarn/pnpm/bun) and its existing linter — never rip ESLint→Biome or npm→pnpm unless the brief asks. Minimal diff, in the repo's own idiom.
+The lead scaffolds **pnpm** greenfield (the team's greenfield default: `pnpm` install/scripts/`pnpm-lock.yaml`). You own that default's config thereafter — workspaces, catalogs (single-version-policy across packages), lockfile hygiene. **Brownfield: match the repo's actual package manager** (npm/yarn/pnpm/bun) and its existing linter — never rip ESLint→Biome or npm→pnpm unless the brief asks. Minimal diff, in the repo's own idiom.
 
 ## Discipline (the sharp edges)
 - **Cache correctness is the whole game.** Every task declares its real `outputs` (or caching silently ships stale artifacts) and every input that affects output — including env vars via `env`/`globalEnv` (a missing env key = a poisoned cache hit). Never let a script bypass turbo's parallelism/caching. Verify miss/hit reasons with `turbo run … --summarize`/`--dry` against the skill, not memory.

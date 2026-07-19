@@ -1,0 +1,13 @@
+{
+  "name": "engineering",
+  "owner": {
+    "name": "ap-justin"
+  },
+  "plugins": [
+    {
+      "name": "engineering",
+      "source": ".",
+      "description": "Lead orchestrator skill + 24 specialist subagents and their skills. Same team you run locally, installable anywhere."
+    }
+  ]
+}
