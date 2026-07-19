@@ -2,6 +2,13 @@
 
 Semver-ish: new agent/capability → minor, prompt fix → patch, orchestration-contract break → major.
 
+## v0.30.0 — renamed plugin `engineering` → `team-justin`, lead skill `team` → `lead`
+Identity rename. The plugin/marketplace was `engineering` — which collides with the *other* `engineering` plugin in `knowledge-work-plugins` — and the namespaced lead command `/engineering:team` stuttered "team" twice once the skill lived under the plugin namespace. Renamed the plugin to **`team-justin`** and the lead skill to **`lead`**, so it installs as `team-justin@team-justin` and invokes as **`/team-justin:lead`** (or bare `/lead`). Roster and behavior are unchanged — pure identity/wiring.
+- **`.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json`** — plugin name + marketplace name + plugin entry `engineering` → `team-justin`. Repo stays `ap-justin/engineering` (only the plugin was renamed, not the GitHub repo), so `repository` and marketplace `source.repo` are unchanged.
+- **Lead skill renamed** `team` → **`lead`** (`skills/team/` → `skills/lead/`, frontmatter `name:`), matching its own prose ("the lead") and dropping the `team-justin:team` doubling.
+- **README / ROSTER / SOURCES** — structural identifiers updated (`engineering@engineering` → `team-justin@team-justin`, `engineering:*` → `team-justin:*`, `/engineering:team` → `/team-justin:lead`, `skills/team` → `skills/lead`, `` `team` skill `` → `` `lead` skill ``); English "engineering team" prose left intact.
+- **Breaking**: the install key (`team-justin@team-justin`) and entry command (`/team-justin:lead`) both changed — existing installs must `/plugin marketplace remove engineering` then re-add + reinstall under the new names. Minor bump (pre-1.0); no change to the lead↔specialist orchestration contract.
+
 ## v0.29.1 — surface `graphic-designer` setup to the user (direct *and* indirect)
 Directly invoking `graphic-designer` already reported a missing `GOOGLE_API_KEY`, but on the **indirect** path (lead routes `design-director → graphic-designer` during a build) the requirement could be missed: the subagent reports "to the PM," not the user, and nothing made the lead relay it — so a hero-image step could quietly fall back to a static gradient without the user ever learning a real asset was one env var away.
 - **`agents/graphic-designer.md`** — a missing prerequisite now returns a structured **`BLOCKED (setup)`** result naming the exact fix (`GOOGLE_API_KEY` / Node+`npm install` / ffmpeg / rembg), the resolving command, and the fallback — instead of prose "tell the PM." The user chooses real vs. fallback; the agent doesn't decide by silently shipping a placeholder. Node named explicitly.

@@ -1,5 +1,5 @@
 ---
-name: team
+name: lead
 description: Run a versioned engineering team as the project lead — scope work, detect the stack, route to the right specialist, and drive it to done. Use to start a project from scratch OR to jump into an existing codebase and contribute a feature/fix. Handles greenfield and brownfield.
 argument-hint: "<what to build or contribute>"
 ---
