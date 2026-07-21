@@ -1,8 +1,8 @@
 ---
 name: roster
-description: Roster operations for this team plugin — hire or retire a specialist, author a skill, or audit the roster for drift. The versioned "Growing the team" checklist, executed as a tool.
+description: Roster operations for this team plugin — hire or retire a specialist, author a skill, sweep learned preferences back into the team, or audit the roster for drift. The versioned "Growing the team" checklist, executed as a tool.
 disable-model-invocation: true
-argument-hint: "<hire|author|retire|audit> [name]"
+argument-hint: "<hire|author|learn|retire|audit> [name]"
 ---
 
 You run in the **main thread** (like `lead`) — minting a seat edits the orchestration contract (the `lead` routing table) and bumps + tags a version, which a subagent can't own. This skill operationalizes `ROSTER.md` → *Growing the team* so every seat is wired **identically** and nothing drifts.
@@ -29,6 +29,8 @@ Every place a **seat (agent)** is registered. `hire` writes all of them, `retire
 
 A **skill** touches a smaller map: `skills/<name>/SKILL.md` (+ any disclosed sibling files), a note in `ROSTER.md` → *Reused, not owned* (and `SOURCES.md` if it backs a seat), `VERSION`/`CHANGELOG`/header, git. **No agent-count bump** (#6–#7 count is agents only). A *vendored* skill also needs the provenance HTML comment + a `SOURCES.md` → *Vendored resources* note — copy the shape at the top of `skills/writing-great-skills/SKILL.md`.
 
+**`learn`** touches a map of its own: it promotes preferences from the inbox (`PREFERENCES.md`) into `skills/house-style/SKILL.md` and/or targeted `agents/<name>.md` prompt edits, then bumps `VERSION`/`CHANGELOG`/header. No agent added → **no count bump**. It's the only verb that reads user-global state (`~/.claude/team-justin/`) and the only one gated on a per-edit user OK before it writes.
+
 The **count N** (#6–#7) is drift-prone — never hand-increment it; recompute from `ls agents/*.md | wc -l`.
 
 ## Dispatch
@@ -38,6 +40,7 @@ Read the one file for the requested verb, then execute it against the wiring map
 |---|---|---|
 | `hire [role]` | mint a specialist + wire #1–#9 | `hire.md` |
 | `author [name]` | mint or vendor a skill | `author.md` |
+| `learn` | sweep the preference inbox back into the team (gated) | `learn.md` |
 | `retire <name>` | remove a seat + unwire everywhere | `retire.md` |
 | `audit` | report roster drift (read-only) | `audit.md` |
 

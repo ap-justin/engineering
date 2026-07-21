@@ -14,6 +14,7 @@ This team is a versioned plugin; `${CLAUDE_PLUGIN_ROOT}` is its install dir (res
 - **`${CLAUDE_PLUGIN_ROOT}/ROSTER.md`** — current agents, version, and how to grow the team.
 - **`${CLAUDE_PLUGIN_ROOT}/SOURCES.md`** — official MCP/skill/plugin each stack must use.
 - **`${CLAUDE_PLUGIN_ROOT}/TRACKER.md`** — the file-based roadmap/plan/icebox convention (Reconcile & capture) `product-manager` + `planner` dispatch against.
+- **`${CLAUDE_PLUGIN_ROOT}/PREFERENCES.md`** — how the team *evolves*: the cross-project preference loop (capture via `/remember` + agent learnings → sweep via `/roster learn` → promoted into `house-style`/seats). Read `skills/house-style/SKILL.md` to apply what the team has learned (Step 3).
 
 ## Team principle — official sources first
 No agent answers framework/library/API specifics from training data. Every specialist already owns its own source chain (it's in the seat's own definition; `SOURCES.md` is the authoritative map). So you don't restate it on delegation — hand off the task + context and trust the seat to resolve its source. This is a team floor, not a per-hand-off instruction.
@@ -76,6 +77,8 @@ Most work goes straight from grilling/`Plan` to a builder. But when the change *
 ## Step 3 — stack routing (pick the right agent for the codebase)
 Detect from `package.json` / config, then delegate to the matching specialist. Pass the relevant context in full but **scoped** — the exact files/paths (and ranges) the change touches, handed down from `Explore`'s map so the builder doesn't re-discover them, plus the plan and conventions. Enough to build without re-exploring; not a dump of the whole tree — a builder that has to hunt for its own files is the #1 way a single run sprawls to hundreds of K tokens. The seat owns its official source (per the team principle — don't restate it). Backing sources live in `ROSTER.md`/`SOURCES.md`, not here, so they can't drift out of sync.
 
+**Apply house style, collect learnings (the evolution loop — `PREFERENCES.md`).** Before dispatching, glance at `${CLAUDE_PLUGIN_ROOT}/skills/house-style/SKILL.md` and fold the **lane-relevant** learned preferences into the seat's scoped context (like design tokens — only the slice that seat needs, not the whole file; and only where the repo doesn't already establish its own convention, which wins on brownfield). And in the same handoff, give the seat the **learnings channel**: if it discovers a durable, cross-project preference mid-build (the user rejected X twice and chose Y; an approved convention worth keeping), it appends one line to `~/.claude/team-justin/inbox.md` in the `PREFERENCES.md` format — journaling, not derailing. That inbox is later swept into the team by `/roster learn`. (Explicit user preferences the user calls out go via `/team-justin:remember` — that's their channel, not yours to infer.)
+
 | Detected / needed | Specialist |
 |---|---|
 | Svelte, `@sveltejs/kit` | `sveltekit-builder` |
@@ -88,7 +91,6 @@ Detect from `package.json` / config, then delegate to the matching specialist. P
 | SEO/AEO: metadata/OG, canonical/hreflang, sitemap/robots, JSON-LD, indexability, AI-answer readiness (post-build) | `seo-engineer` |
 | Postgres / Drizzle / Prisma / postgres.js | `postgres-architect` |
 | auth / login / signup / sessions / social-OAuth / SSO / `better-auth` | `better-auth-specialist` |
-| interactive UI primitive: modal/dialog/dropdown/menu/combobox/select/date-picker/tabs/tooltip/popover/toast — accessible, not hand-rolled / `@ark-ui/*` | `ark-ui-specialist` (→ framework builder places it) |
 | user research / user flows / IA / usability critique / UX copy / design→eng handoff spec (upstream of visual design) | `ux-designer` (before `design-director`) |
 | design/landing/marketing/portfolio UI | `ux-designer` (if flows/IA/research unresolved) → `design-director` → builder → `taste-reviewer` (static) → `visual-reviewer` (rendered) |
 | motion/animation: what should animate + how it should feel (easing/duration/origin/interruptibility/frequency) — a motion spec before build, or a craft gate on shipped animation | `motion-engineer` (advise after `design-director`, before builder; review as motion sibling of `taste-reviewer`/`visual-reviewer`) |
@@ -102,6 +104,8 @@ Detect from `package.json` / config, then delegate to the matching specialist. P
 | "what should we build next" / roadmap / prioritize competing asks (upstream of planning) | `product-manager` (see Step 2.55) |
 | work too big for one context / needs a durable plan of record / decompose a spec into parallelizable slices | `planner` (see Step 2.6) |
 | **no specialist matches** | general path + **recommend a new specialist** (below) |
+
+**Ark UI isn't routed.** Interactive UI primitives (modal/dialog/dropdown/menu/combobox/select/date-picker/tabs/tooltip/popover/toast) are no longer a seat — every UI framework builder (`sveltekit-builder`, `react-router-builder`, `nextjs-builder`) carries the `ark-ui` skill and builds the accessible primitive in-place, so there's no compose-then-hand-off hop. The reach-for-Ark judgment lives in the skill: greenfield / Vue-Solid-Svelte / already-on-Ark → Ark; brownfield defers to the repo's existing lib (shadcn/Radix/…). The a11y gate still fires post-build via `/accessibility-review` + `visual-reviewer` (Step 4). Just route the primitive to the framework builder as part of the feature — no separate specialist.
 
 **TypeScript isn't routed.** Every TS-writing builder carries the `typescript` skill (cheat-sheet baseline + type craft + compiler-config discipline), so tsconfig/strictness/module-resolution/hard-type work happens in-context — no seat, no hop. For repo-wide TS-infra work (strict migration, monorepo project references, type-perf profiling), dispatch a general agent with the `typescript` skill loaded rather than routing to a specialist. The **formatter/linter + monorepo task/package graph** (Biome/ESLint/Prettier, pnpm, Turborepo) *is* routed — to `toolchain-engineer` (it owns the tasks; the `typescript` skill owns `tsconfig` content).
 
@@ -137,4 +141,5 @@ When the work needs a stack with no specialist (e.g. content-heavy → Astro):
 - Brownfield = minimal diff, match existing patterns; never impose the team's default stack on someone else's repo.
 - If a `management/` store exists, reconcile it in the commit that lands each slice (Step 4.5) and capture any pitched/discovered out-of-scope idea to the roadmap Icebox the moment it surfaces — don't let the plan drift or an idea drop.
 - Report crisply between phases (mode, stack detected, ship/fix verdict). Don't dump subagent transcripts.
+- The team evolves (`PREFERENCES.md`): apply `house-style` to dispatched seats and pass the learnings-inbox channel on handoff (Step 3); route explicit user "remember this" to `/team-justin:remember`; suggest a `/roster learn` sweep when the inbox has accrued. Never infer a preference from approval — capture is explicit or agent-journaled, never guessed.
 - On request, report the team version (from `VERSION`) and roster.
