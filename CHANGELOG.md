@@ -2,6 +2,12 @@
 
 Semver-ish: new agent/capability → minor, prompt fix → patch, orchestration-contract break → major.
 
+## v0.35.5 — pin every non-lead seat to a model (stop Fable-session cost cascade)
+Observed problem: with every specialist on `inherit`, a Fable 5 session (premium, $10/$50) forced all 23 subagent calls onto Fable pricing — including the mechanical ones (`taste-reviewer` was the sole exception, already pinned `sonnet`). Cost scaled with the *lead's* tier, not each seat's actual need, and burned through budget fast on any multi-agent slice. Pinned every non-lead seat explicitly: **opus** for implementers + judgment-heavy specialists + the three hardest reviewers (`ux-designer`, `design-director`, `motion-engineer`, `graphic-designer`, all `*-builder`, `postgres-architect`, `better-auth-specialist`, `vercel-platform-engineer`, `conversion-copywriter`, `test-writer`, `planner`, `product-manager`, `code-reviewer`, `architecture-reviewer`, `visual-reviewer`); **sonnet** for mechanical/checklist work (`seo-engineer`, `toolchain-engineer`, `vercel-perf-optimizer`, joining `taste-reviewer`). This reverses v0.34.1's inherit-for-parity fix on the three reviewers — that fix traded a pin-as-ceiling problem (Opus-only era) for a session-cascade problem (multi-tier era); pinning explicit tiers fixes both, at the cost of the lead no longer being able to cheapen the whole fleet by just dropping its own session tier.
+- 22 `agents/*.md` frontmatter — added `model: opus` or `model: sonnet` (see split above); `taste-reviewer` unchanged.
+- `ROSTER.md` *Model tiers* rewritten: table collapses the old inherit/opus-pinned split into two rows (opus / sonnet), rationale kept per-seat, new "why pinned instead of inherit" lead-in.
+- No seat added/retired, no orchestration-contract break → patch bump.
+
 ## v0.35.4 — roster drift fix: version header + canonical inherit
 `/roster audit` found two drifts. ROSTER header lagged at v0.35.2 while VERSION/plugin.json were v0.35.3 — headers must track VERSION (audit assertion #2). And `code-reviewer`/`architecture-reviewer`/`visual-reviewer` carried explicit `model: inherit` frontmatter while every other inherit seat omits the line — two representations of one intent. Canonical form is inherit = no `model:` line (audit assertion #5); stripped the three so the fleet expresses inherit one way. No seat added, no behavior change (all three already resolved to session tier).
 
