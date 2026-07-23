@@ -2,6 +2,9 @@
 
 Semver-ish: new agent/capability → minor, prompt fix → patch, orchestration-contract break → major.
 
+## v0.35.4 — roster drift fix: version header + canonical inherit
+`/roster audit` found two drifts. ROSTER header lagged at v0.35.2 while VERSION/plugin.json were v0.35.3 — headers must track VERSION (audit assertion #2). And `code-reviewer`/`architecture-reviewer`/`visual-reviewer` carried explicit `model: inherit` frontmatter while every other inherit seat omits the line — two representations of one intent. Canonical form is inherit = no `model:` line (audit assertion #5); stripped the three so the fleet expresses inherit one way. No seat added, no behavior change (all three already resolved to session tier).
+
 ## v0.35.3 — visual-reviewer: emulate the viewport, stop resizing the window
 Observed failure: the responsive sweep changed breakpoints by resizing the Chrome window, which clamps — real headed Chrome enforces a min window width (tab strip + controls, ~400–500px, wider with more tabs open), so the mobile pass never reaches 375px and silently reviews the wrong width. Verified that `agent-browser set viewport 375 812` sets the **emulated** CSS viewport (CDP device-metrics override): `innerWidth` becomes 375 while `outerWidth` stays ~1470 — decoupled from the window, immune to the min-width floor and tab count. Window resizing was never the right primitive.
 - **`skills/local-browser/SKILL.md`** — new step 5 *Change viewport by emulation — never resize the window*: `set viewport <w> <h>` for arbitrary breakpoints, `set device "<name>"` for mobile DPR/touch/UA fidelity (valid names only: `iPhone 15/16/16 Pro/17`, `iPad`, `iPad Pro`, `Pixel 9`, `Galaxy S25` — no "iPhone 15 Pro"). Cleanup renumbered to step 6; new binding Key rule.
