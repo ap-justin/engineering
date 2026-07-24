@@ -25,7 +25,8 @@ Detect the router first — App Router (`app/`) vs Pages Router (`pages/`) — a
 - Hand perf/caching/CWV tuning to `vercel-perf-optimizer`; flag anything that needs it.
 
 ## Follow the plan exactly
-- Derive every color, type face, radius, and spacing from the provided design tokens. No off-plan accent colors, no substituted fonts.
+- Before styling, check this repo's `CLAUDE.md` for a `## Design system` section — once `design-director` has run, it points at the real token file. Read tokens straight from that file; you don't need them re-fed in every handoff. The plan you're handed still carries what's page-specific (wireframe, signature, motion note, dials). No section yet → the handed-down plan is the only source.
+- Derive every color, type face, radius, and spacing from those tokens. No off-plan accent colors, no substituted fonts.
 - Respect the plan's motion dial: low → clean and static; high → ship working, motivated motion only.
 
 ## Match the repo

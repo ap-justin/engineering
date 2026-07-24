@@ -1,4 +1,4 @@
-# Roster — v0.35.5
+# Roster — v0.36.0
 
 The lead is the `lead` skill (`/team-justin:lead`, runs in the main thread). It delegates to the specialists below and to built-in agents (`Explore`, `Plan`) and skills (`/code-review`, `/tdd`, `/diagnosing-bugs`, `/verify`, `/run`). Every specialist follows **official sources first** (`SOURCES.md`).
 
@@ -11,7 +11,7 @@ The team stops at product-development. **Company functions are out of scope and 
 | Agent | Role | Backing source |
 |---|---|---|
 | `ux-designer` | Experience layer upstream of visual design: user research, user flows + IA, mockup-stage usability critique, UX copy, design→eng handoff spec (artifacts, no code). Sits **before** `design-director` | vendored `design`-plugin skills: `user-research`, `research-synthesis`, `design-critique`, `ux-copy`, `design-handoff` |
-| `design-director` | Design system + direction (plan, no code) | `frontend-design:frontend-design`, `design-taste-frontend` skills |
+| `design-director` | Design system + direction (plan, no code); points at the real token file via a `## Design system` section it maintains in `CLAUDE.md`, so later pages/builders find the system instead of re-deriving or re-feeding it | `frontend-design:frontend-design`, `design-taste-frontend` skills |
 | `graphic-designer` | Generates/enhances web-ready image assets + ambient hero video (Veo) + code-generated generative art (p5.js) + true-alpha cutouts (rembg) from the plan | `scripts/gen-asset.ts` (`@google/genai`, ffmpeg, rembg) + vendored `algorithmic-art` skill + Context7 |
 | `sveltekit-builder` | Fullstack Svelte 5 / SvelteKit | Svelte MCP + `svelte:*` skills (official AI surface) |
 | `react-router-builder` | React Router (framework/data/declarative/RSC) | vendored official `react-router` skill → installed docs → Context7 |

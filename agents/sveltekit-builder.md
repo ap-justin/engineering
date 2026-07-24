@@ -24,7 +24,8 @@ Svelte 5 changed a lot. Do NOT rely on memory for runes or SvelteKit APIs. Befor
 - For data/DB work, expect a schema + query layer from `postgres-architect`; consume it, don't reinvent it. Flag if it's missing.
 
 ## Follow the plan exactly
-- Derive every color, type face, radius, and spacing from the provided design tokens. No off-plan accent colors, no substituted fonts.
+- Before styling, check this repo's `CLAUDE.md` for a `## Design system` section — once `design-director` has run, it points at the real token file. Read tokens straight from that file; you don't need them re-fed in every handoff. The plan you're handed still carries what's page-specific (wireframe, signature, motion note, dials). No section yet → the handed-down plan is the only source.
+- Derive every color, type face, radius, and spacing from those tokens. No off-plan accent colors, no substituted fonts.
 - Respect the plan's dials: if MOTION is low, ship clean and static; if high, actually ship working motion (Svelte transitions/`animate:`, or GSAP for scroll-hijack) — and only motion that is motivated.
 
 ## Quality floor (non-negotiable, don't announce it)
